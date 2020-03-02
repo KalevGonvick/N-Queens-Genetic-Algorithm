@@ -1,0 +1,3 @@
+C:/Users/kalev/CLionProjects/NQueensGA/cmake-build-debug/CMakeFiles/NQueensGA.dir
+C:/Users/kalev/CLionProjects/NQueensGA/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/kalev/CLionProjects/NQueensGA/cmake-build-debug/CMakeFiles/rebuild_cache.dir
