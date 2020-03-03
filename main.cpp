@@ -2,7 +2,7 @@
 #include <vector>
 #include <bits/stdc++.h>
 
-#define POPULATION_SIZE 1000
+#define POPULATION_SIZE 4000
 #define BOARD_SIZE 8
 #define SOLUTION_COUNT 92
 
@@ -105,10 +105,10 @@ vector<int> BoardConfig::CreateOffSpring(BoardConfig config2)
     for(int i = 0; i < BOARD_SIZE; i++)
     {
         float probability = float(RandomNumberRanged(0, 100))/100.0f;
-        if(probability < 0.25f )
+        if(probability < 0.45f )
         {
             offspring_config.push_back(this->queen_locations[i]);
-        } else if(probability < 0.50f)
+        } else if(probability < 0.90f)
         {
             offspring_config.push_back(config2.queen_locations[i]);
         } else {
@@ -167,7 +167,7 @@ bool operator<(const BoardConfig &board1, const BoardConfig &board2)
 int main() {
 
     /* seeded random for testing */
-    srand((unsigned)(time(0)));
+    //srand((unsigned)(time(0)));
 
     /* counter to keep track of generation number */
     int generation = 0;
@@ -184,6 +184,7 @@ int main() {
     /* this will loop until all solutions have been found */
     while(solution_count < SOLUTION_COUNT)
     {
+        bool finished_solutions = false;
 
         /* sort the population by fitness (done along side operator< overload) */
         sort(population.begin(), population.end());
@@ -211,19 +212,28 @@ int main() {
                     std::cout << "Generation: " << generation << std::endl;
                     BoardConfigPrint(population[0].queen_locations);
                     std::cout << "Solution Count: " << solution_count << std::endl;
-                    break;
+
+                    finished_solutions = true;
                 }
             }
+            /* create initial population */
+            population.clear();
+            population.reserve(POPULATION_SIZE);
+            population = initPopulation();
+            sort(population.begin(), population.end());
         }
-
+        {
+            if(finished_solutions)
+            break;
+        }
         /* initialize the next generation holder */
         vector<BoardConfig> next_gen;
         next_gen.reserve(POPULATION_SIZE);
         for(int i = 0; i < POPULATION_SIZE; i++) {
 
             /* the top 50% of the population make new offspring*/
-            int Random1 = RandomNumberRanged(0, POPULATION_SIZE*0.5);
-            int Random2 = RandomNumberRanged(0, POPULATION_SIZE*0.5);
+            int Random1 = RandomNumberRanged(0, POPULATION_SIZE*0.25);
+            int Random2 = RandomNumberRanged(0, POPULATION_SIZE*0.25);
             vector<int> new_gen_board = population[Random1].CreateOffSpring(population[Random2]);
 
             /* put the new child in the next population */
@@ -236,4 +246,9 @@ int main() {
         population = next_gen;
         generation++;
     }
+    for(auto & solution_board : solution_boards)
+    {
+        BoardConfigPrint(solution_board.queen_locations);
+    }
+
 }
